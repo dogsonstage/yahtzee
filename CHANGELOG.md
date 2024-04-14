@@ -5,3 +5,4 @@
 ### Added or Changed
 - Added this changelog
 - Added all files made so far
+- Updated README
