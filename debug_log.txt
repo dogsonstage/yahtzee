@@ -1,0 +1,69 @@
+
+Welcome to Yahtzee!
+If you are unfamiliar with the game, type 'help' to see how to play.
+To see a list of commands, type 'commands'.
+A separate window displays the score card for the current game,
+it's helpful to keep it off to the side to keep track of scores as you play.
+
+How many players are there, 1 or 2?
+q
+
+Invalid input: please enter only 1 or 2. How many players?
+yes
+
+Invalid input: please enter only 1 or 2. How many players?
+1
+
+Type 'roll' to begin.
+
+What would you like to do?
+quit
+
+Are you sure you want to quit? Your game will not be saved. Yes or no?
+yes
+
+Thank you for playing!
+
+The game will close in 3 seconds.
+-------------------------------------------------------------------
+Player 1's SCORECARD
+
+ONES: null
+TWOS: null
+THREES: null
+FOURS: null
+FIVES: null
+SIXES: null
+TOTAL SCORE: null
+BONUS: null
+UPPER SUBTOTAL: null
+3 OF A KIND: null
+4 OF A KIND: null
+FULL HOUSE: null
+SMALL STRAIGHT: null
+LARGE STRAIGHT: null
+CHANCE: null
+YAHTZEE: null
+YAHTZEE BONUS: null
+LOWER SUBTOTAL: null
+GRAND TOTAL: null
+
+[ONES, , ]
+[TWOS, , ]
+[THREES, , ]
+[FOURS, , ]
+[FIVES, , ]
+[SIXES, , ]
+[TOTAL SCORE, , ]
+[BONUS, , ]
+[, , ]
+[3 OF A KIND, , ]
+[4 OF A KIND, , ]
+[FULL HOUSE, , ]
+[SMALL STRAIGHT, , ]
+[LARGE STRAIGHT, , ]
+[CHANCE, , ]
+[YAHTZEE, , ]
+[YAHTZEE BONUS, , ]
+[GRAND TOTAL, , ]
+
