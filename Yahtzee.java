@@ -1,3 +1,6 @@
+/***
+ * Created on 3/12/24 by @author Madison S.
+ */
 package main;
 
 import java.io.FileNotFoundException;
@@ -8,7 +11,9 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The main controller of the game, what the player "executes" to play
+ * A text based game of Yahtzee with some basic GUI elements. 
+ * Currently only works if run with cmd. 
+ * The main controller of the game.
  */
 public class Yahtzee {
 	private static int numPlayers = 0;
@@ -22,6 +27,8 @@ public class Yahtzee {
 	private static boolean player1FirstTurn = true;
 	private static boolean player2FirstTurn = true;
 	protected static ScoreCardWindow scoreWindow;
+	private static boolean player1GameFinished = false;
+	private static boolean player2GameFinished = false;
 
 	public static void main(String[] args) throws FileNotFoundException, InterruptedException {
 		/*
@@ -35,11 +42,7 @@ public class Yahtzee {
 		//Set up debug log
 		debugLog = new PrintStream("debug_log.txt");
 		console = System.out;
-		
-		
-		
-		
-		//TODO: Make proper intro
+
 		//Intro and player count
 		scoreWindow = new ScoreCardWindow();
 		print("Welcome to Yahtzee!\n"
@@ -55,6 +58,7 @@ public class Yahtzee {
 		}
 		else {
 			numPlayers = 1;
+			player2GameFinished = true;
 		}
 		
 		//Begin play
@@ -81,6 +85,9 @@ public class Yahtzee {
 			}
 			player1FirstTurn = true;
 			player1.updateTurnScored();
+			if (player1.getScoreCard().getScore("GRAND TOTAL") != null) {
+				player1GameFinished = true;
+			}
 			
 			//Player 2's turn
 			if (numPlayers == 2 && numOfPlayerTurn == 2) {
@@ -97,12 +104,57 @@ public class Yahtzee {
 				numOfPlayerTurn = 1;
 				player2FirstTurn = true;
 				player2.updateTurnScored();
-				
-				//TODO: Handle endgame (all scores entered)
+				if (player2.getScoreCard().getScore("GRAND TOTAL") != null) {
+					player2GameFinished = true;
+				}
+			}
+			
+			//All possible scores marked, finish game
+			if (player1GameFinished && player2GameFinished) {
+				player1.updateScoreWindow("GRAND TOTAL", player1.getScoreCard().getScore("GRAND TOTAL"), "PLAYER 1");
+				if (numPlayers == 2) {
+					player2.updateScoreWindow("GRAND TOTAL", player2.getScoreCard().getScore("GRAND TOTAL"), "PLAYER 2");
+				}
+				scoreCard();
+				print("The game has finished!\n" + winnerMessage());
+				print("To play another game, please enter 'quit' and restart the program.");
+				String[] quit = { "quit", "q" };
+				input = checkInput(scnr.nextLine(), quit, "enter 'quit'. The game is over.");
+				player1.nextMove(input);
 			}
 		}
 	}
 	
+	/***
+	 * Generates a message declaring a winner based on the number 
+	 * of points each player has.
+	 * 
+	 * @return a String message declaring the winner of the game
+	 */
+	private static String winnerMessage() {
+		int player1Total = player1.getScoreCard().getScore("GRAND TOTAL");
+		int player2Total = 0;
+		if (numPlayers == 2) {
+			player2Total = player2.getScoreCard().getScore("GRAND TOTAL");
+		}
+		
+		if (numPlayers == 1) {
+			return "You scored " + player1Total + ".";
+		}
+		else {
+			if (player1Total > player2Total) {
+				return "Player 1 wins with " + player1Total + " points, " + (player1Total - player2Total) + " points ahead of Player 2.";
+			}
+			else if (player2Total > player1Total) {
+				return "Player 2 wins with " + player2Total + " points, " + (player2Total - player1Total) + " points ahead of Player 1.";
+
+			}
+			else {
+				return "You both scored " + player1Total + ". It's a tie!";
+			}
+		}
+	}
+
 	/**
 	 * Analyzes a user's input against an array of expected, valid Strings. If input is not valid,
 	 * the console prints the specified message to prompt the user to input a valid command. Otherwise,
@@ -158,7 +210,7 @@ public class Yahtzee {
 	 */
 	protected static void quit() throws InterruptedException {
 		print("Thank you for playing!");
-		print("The game will close in 3 seconds.");
+		print("The game will close in 5 seconds.");
 		
 		//Save both scorecards to debug log
 		System.setOut(Yahtzee.debugLog);
@@ -188,7 +240,7 @@ public class Yahtzee {
 		System.setOut(Yahtzee.console);
 		
 		//Quit app
-		TimeUnit.SECONDS.sleep(3);
+		TimeUnit.SECONDS.sleep(5);
 		System.exit(0);
 	}
 	

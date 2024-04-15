@@ -1,3 +1,6 @@
+/***
+ * Created on 3/12/24 by @author Madison S.
+ */
 package main;
 
 import java.util.HashMap;
@@ -48,6 +51,12 @@ class GameController {
 		rand = new Random();
 	}
 	
+	/***
+	 * Uses player input to decide which move to execute
+	 * 
+	 * @param input - move to be executed
+	 * @throws InterruptedException
+	 */
 	protected void nextMove(String input) throws InterruptedException {
 		switch (input){
 			case "roll":
@@ -242,9 +251,12 @@ class GameController {
 		}
  
 		Yahtzee.print("Which score would like to mark for?");
-		String[] exp = {"ones", "twos", "threes", "fours", "fives", "sixes", "three of a kind", "3 of a kind", 
+		String[] exp = {"","ones", "twos", "threes", "fours", "fives", "sixes", "three of a kind", "3 of a kind", 
 				"4 of a kind", "four of a kind", "full house", "small straight", "smll strght", "large straight",
-				"lrg strght", "yahtzee", "yahtzee bonus", "chance", "back"};
+				"lrg strght", "yahtzee", "chance", "back"};
+		if (scoreCard.getScore("YAHTZEE") != null && scoreCard.getScore("YAHTZEE") != 0) {
+			exp[0] = "yahtzee bonus";
+		}
 		tempInput = Yahtzee.checkInput(Yahtzee.scnr.nextLine(), exp, "the name of the score you wish to mark\n"
 				+ "To mark a zero for score not listed above, enter the name of the score.\n"
 				+ "If you've already scored a Yahtzee and would like to score another, enter 'Yahtzee Bonus'.\n"
@@ -307,6 +319,13 @@ class GameController {
 		
 		//Update score card window
 		updateScoreWindow(inputScore.toUpperCase(), scoreCard.getScore(inputScore), name.toUpperCase());
+		if (scoreCard.getScore("BONUS") != null) {
+			updateScoreWindow("TOTAL SCORE", scoreCard.getScore("TOTAL SCORE"), name.toUpperCase());
+			updateScoreWindow("BONUS", scoreCard.getScore("BONUS"), name.toUpperCase());
+		}
+		if (scoreCard.getScore("YAHTZEE BONUS") != null && scoreCard.getScore("YAHTZEE BONUS") == 0) {
+			updateScoreWindow("YAHTZEE BONUS", scoreCard.getScore("YAHTZEE BONUS"), name.toUpperCase());
+		}
 	}
 
 	/***
@@ -489,7 +508,7 @@ class GameController {
 	 * @param scoreVal - int value of the score to be marked
 	 * @param name - name of the player whose score is to be updated
 	 */
-	private void updateScoreWindow(String scoreName, int scoreVal, String name) {
+	protected void updateScoreWindow(String scoreName, int scoreVal, String name) {
 		for (int i = 0; i < Yahtzee.scoreWindow.data.length; i++) {
 			if (Yahtzee.scoreWindow.data[i][0].equals(scoreName)) {
 				if (name.equals("PLAYER 1")) {

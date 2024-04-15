@@ -1,3 +1,6 @@
+/***
+ * Created on 3/13/24 by @author Madison S.
+ */
 package main;
 
 import java.util.Collection;
@@ -60,16 +63,24 @@ class ScoreCard {
 	protected void score(String name, HashMap<String, Integer> hand, HashMap<String, Integer> table, boolean zero) {
 		if (zero) {
 			scoreCard.put(name, 0);
-			return;
+			if (scoreCard.get("YAHTZEE") != null && scoreCard.get("YAHTZEE") == 0) {
+				scoreCard.put("YAHTZEE BONUS", 0);
+			}
 		}
-		if (name.equals("YAHTZEE BONUS") && scoreCard.get("YAHTZEE BONUS") != null) {
-			scoreCard.put(name, scoreCard.get(name) + scoreValues.get(name));
+		else if (name.equals("YAHTZEE BONUS")) {
+			if (scoreCard.get("YAHTZEE") != null && scoreCard.get("YAHTZEE") != 0) {
+				scoreCard.put(name, scoreCard.get(name) + scoreValues.get(name));
+			}
 		}
-		scoreCard.put(name, findSingleScore(name, hand, table));
+		else {
+			scoreCard.put(name, findSingleScore(name, hand, table));
+		}
+		
 		
 		//Calculate upper subtotal and bonus
 		if (scoreCard.get("ONES") != null && scoreCard.get("TWOS") != null && scoreCard.get("THREES") != null &&
-			scoreCard.get("FOURS") != null && scoreCard.get("FIVES") != null && scoreCard.get("SIXES") != null) {
+			scoreCard.get("FOURS") != null && scoreCard.get("FIVES") != null && scoreCard.get("SIXES") != null && 
+			scoreCard.get("UPPER SUBTOTAL") == null) {
 			
 			int sum = scoreCard.get("ONES") + scoreCard.get("TWOS") + scoreCard.get("THREES") + scoreCard.get("FOURS") 
 						+ scoreCard.get("FIVES") + scoreCard.get("SIXES");
@@ -83,19 +94,21 @@ class ScoreCard {
 				scoreCard.put("BONUS", 0);
 			}
 			
-			if (scoreCard.get("BONUS") != null) {
+			if (scoreCard.get("BONUS") != 0) {
 				scoreCard.put("UPPER SUBTOTAL", scoreValues.get("BONUS") + sum);
 			}
-			scoreCard.put("UPPER SUBTOTAL", sum);
+			else {
+				scoreCard.put("UPPER SUBTOTAL", sum);
+			}
 		}
 		//Calculate lower subtotal
-		if (scoreCard.get("3 OF A KIND") != null && scoreCard.get("4 OF A KIND") != null && scoreCard.get("FULL HOUSE") != null &&
-				scoreCard.get("SMALL STRAIGHT") != null && scoreCard.get("LARGE STRAIGHT") != null && scoreCard.get("YAHTZEE") != null &&
+		if (scoreCard.get("3 OF A KIND") != null && scoreCard.get("4 OF A KIND") != null && scoreCard.get("FULL HOUSE") != null && 
+				scoreCard.get("SMALL STRAIGHT") != null && scoreCard.get("LARGE STRAIGHT") != null && scoreCard.get("YAHTZEE") != null && 
 				scoreCard.get("CHANCE") != null && scoreCard.get("YAHTZEE BONUS") != null) {
 				
 				int sum = scoreCard.get("3 OF A KIND") + scoreCard.get("4 OF A KIND") + scoreCard.get("FULL HOUSE") 
 						+ scoreCard.get("SMALL STRAIGHT") + scoreCard.get("LARGE STRAIGHT") + scoreCard.get("YAHTZEE")
-						+ scoreCard.get("CHANCE");
+						+ scoreCard.get("CHANCE") + scoreCard.get("YAHTZEE BONUS");
 				
 				scoreCard.put("LOWER SUBTOTAL", sum);
 		}
@@ -215,7 +228,9 @@ class ScoreCard {
 		Object[] keys = scoreCard.keySet().toArray();
 		
 		for (Object key : keys) {
-			if (scoreCard.get(key) == null) {
+			if (scoreCard.get(key) == null && !key.equals("YAHTZEE BONUS") && !key.equals("UPPER SUBTOTAL")
+					&& !key.equals("LOWER SUBTOTAL") && !key.equals("BONUS")  && !key.equals("GRAND TOTAL") 
+					&& !key.equals("TOTAL SCORE")) {
 				possZeros = possZeros + key + ",";
 			}
 		}
@@ -408,7 +423,6 @@ class ScoreCard {
 	/***
 	 * Returns a string representation of the current scorecard.
 	 * Only used for debug_log. 
-	 * STILL IN PROGRESS, TODO
 	 */
 	public String toString(String playerName) {
 		
