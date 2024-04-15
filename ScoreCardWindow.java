@@ -1,3 +1,6 @@
+/***
+ * Created on 4/13/24 by @author Madison S.
+ */
 package main;
 
 import javax.swing.JFrame;
@@ -6,6 +9,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+/***
+ * GUI to display current game scorecard.
+ */
 class ScoreCardWindow {
 	
 	protected JTable table;
